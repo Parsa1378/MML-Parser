@@ -1,4 +1,6 @@
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +26,49 @@ public class Components {
                 return Color.YELLOW;
             default:
                 return null;
+        }
+    }
+
+    public static void parseElement(Element element, Container parent) {
+        JComponent component;
+        switch (element.getNodeName()) {
+            case "JPanel":
+                component = makeJPanel(element);
+                break;
+            case "JButton":
+                component = makeJButton(element);
+                break;
+            case "JLabel":
+                component = makeJLabel(element);
+                break;
+            case "JTextField":
+                component = makeJTextField(element);
+                break;
+            case "JCheckBox":
+                component = makeJCheckbox(element);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected tag: " + element.getNodeName());
+        }
+
+        LayoutManager parentLayout = parent.getLayout();
+        if (parentLayout instanceof BorderLayout) {
+            addToBorderLayout(element, component, parent);
+        } else if (parentLayout instanceof FlowLayout) {
+            parent.add(component);
+        } else if (parentLayout instanceof GridLayout) {
+            parent.add(component);
+        }
+
+        if (element.getNodeName().equals("JPanel")) {
+            attachLayout(element, component);
+        }
+
+        NodeList children = element.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.ELEMENT_NODE)
+                parseElement((Element) child, component);
         }
     }
 
@@ -77,7 +122,7 @@ public class Components {
             parent.add(component);
     }
 
-    public static JFrame parseJFrame(Element root) {
+    public static JFrame makeJFrame(Element root) {
         JFrame jFrame = new JFrame();
         if (root.hasAttribute("title"))
             jFrame.setTitle(root.getAttribute("title"));
@@ -108,4 +153,52 @@ public class Components {
         }
     }
 
+    public static JPanel makeJPanel(Element element) {
+        JPanel jPanel = new JPanel();
+        if (element.hasAttribute("background"))
+            jPanel.setBackground(getColor(element.getAttribute("background")));
+        return jPanel;
+    }
+
+    public static JLabel makeJLabel(Element element) {
+        JLabel jLabel = new JLabel();
+        if (element.hasAttribute("text"))
+            jLabel.setText(element.getAttribute("text"));
+        if (element.hasAttribute("tool_tip_text"))
+            jLabel.setToolTipText(element.getAttribute("tool_tip_text"));
+        if (element.hasAttribute("foreground"))
+            jLabel.setForeground(getColor(element.getAttribute("foreground")));
+        return jLabel;
+    }
+
+    public static JTextField makeJTextField(Element element) {
+        JTextField textField = new JTextField();
+        if (element.hasAttribute("tool_tip_text"))
+            textField.setToolTipText(element.getAttribute("tool_tip_text"));
+        if (element.hasAttribute("foreground"))
+            textField.setForeground(getColor(element.getAttribute("foreground")));
+        return textField;
+    }
+
+    public static JButton makeJButton(Element element) {
+        JButton jButton = new JButton();
+        if (element.hasAttribute("text"))
+            jButton.setText(element.getAttribute("text"));
+        if (element.hasAttribute("foreground"))
+            jButton.setForeground(getColor(element.getAttribute("foreground")));
+        if (element.hasAttribute("background"))
+            jButton.setBackground(getColor(element.getAttribute("background")));
+        return jButton;
+    }
+
+    public static JCheckBox makeJCheckbox(Element element) {
+        JCheckBox checkBox = new JCheckBox();
+        if (element.hasAttribute("text"))
+            checkBox.setText(element.getAttribute("text"));
+        if (element.hasAttribute("selected"))
+            checkBox.setSelected(Boolean.parseBoolean(element.getAttribute("selected")));
+        if (element.hasAttribute("foreground"))
+            checkBox.setForeground(getColor(element.getAttribute("foreground")));
+        return checkBox;
+    }
 }
