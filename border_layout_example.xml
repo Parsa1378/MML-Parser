@@ -1,0 +1,31 @@
+<JFrame
+        width="500"
+        height="500"
+        layout="BorderLayout">
+
+    <JPanel
+            background="gray"
+            layout_gravity="center">
+    </JPanel>
+
+    <JPanel
+            background="red"
+            layout_gravity="west">
+    </JPanel>
+
+    <JPanel
+            background="yellow"
+            layout_gravity="east">
+    </JPanel>
+
+    <JPanel
+            background="green"
+            layout_gravity="north">
+    </JPanel>
+
+    <JPanel
+            background="blue"
+            layout_gravity="south">
+    </JPanel>
+
+</JFrame>

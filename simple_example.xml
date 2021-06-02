@@ -1,0 +1,7 @@
+<JFrame
+        title="Xml Parser"
+        width="400"
+        height="300"
+        layout="BorderLayout">
+
+</JFrame>

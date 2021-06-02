@@ -1,0 +1,14 @@
+<JFrame
+        title="Xml Parser"
+        width="800"
+        height="300"
+        layout="FlowLayout"
+        alignment="right">
+
+    <JButton text="Button 0"/>
+    <JButton text="Button 1"/>
+    <JButton text="Button 2"/>
+    <JButton text="Button 3"/>
+    <JButton text="Button 4"/>
+
+</JFrame>
